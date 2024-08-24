@@ -5,25 +5,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link rel="icon" type="image/png" sizes="32x32" href="./assets/images/favicon-32x32.png">
-  
+  <link rel="stylesheet" href="./style.css">
   <title>Frontend Mentor | Password generator app</title>
+
 </head>
 <body>
-
-  Password Generator
-
-  P4$5W0rD!
-
-  Character Length
-
-  Include Uppercase Letters
-  Include Lowercase Letters
-  Include Numbers
-  Include Symbols
-
-  Strength
-
-  Generate
-
+  <main>
+    <article>
+      <h1>Password Generator</h1>
+      <section class="generated_password">
+        <h2>P4$5W0rD!</h2>
+        <a href="">
+          <img src="./assets/images/icon-copy.svg" alt="copy icon">
+        </a>
+      </section>
+      <section class="pass_params">
+        <form action="" novalidate>
+          <div>
+            <label for="char_length">Character Length</label>
+            <span>10</span>
+          </div>
+          <input type="range" name="char_length" id="char_length" min="0" max="20">
+          <label for="check-1"><input type="checkbox" name="" id="check-1">Include Uppercase Letters</label>
+          <label for="check-2"><input type="checkbox" name="" id="check-2">Include Lowercase Letters</label>
+          <label for="check-3"><input type="checkbox" name="" id="check-3">Include Numbers</label>
+          <label for="check-4"><input type="checkbox" name="" id="check-4">Include Symbols</label>
+          <section class="strength_display">
+            <h3>Strength</h3>
+            <span>medium</span>
+          </section>
+          <button>Generate <img src="./assets/images/icon-arrow-right.svg" alt="icon arrow right"></button>
+        </form>
+      </section>
+    </article>
+  </main>
 </body>
 </html>
