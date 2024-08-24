@@ -147,5 +147,6 @@ button{
     text-transform:uppercase;
     cursor:pointer;
     background-color:var(--neon-green);
+    border:none;
 }
 
