@@ -50,13 +50,23 @@ h1{
     background-color:var(--dark-grey);
     padding:1rem;
     display:flex;
-    justify-content:space-between;
+    justify-content:flex-end;
     align-items:center;
+    gap:1rem;
 }
 
 h2{
     color:var(--almost-white);
     font-size:1.5rem;
+    opacity:25%;
+    margin-inline-end:auto;
+}
+
+.copy_msg{
+    color:var(--neon-green);
+    font-size:1.125rem;
+    text-transform:uppercase;
+    display:none;
 }
 
 a svg {
@@ -95,7 +105,7 @@ input[type="range"]{
     height:8px;
     margin-block-start:1.125rem;
     background: rgb(164,255,175);
-    background: linear-gradient(90deg, rgba(164,255,175,1) 0%, rgba(164,255,175,1) 50%, rgba(24,23,31,1) 50%);
+    background: linear-gradient(90deg, rgba(164,255,175,1) 0%, rgba(164,255,175,1) 0%, rgba(24,23,31,1) 0%);
     outline:none;
 }
 
@@ -107,6 +117,12 @@ input[type="range"]::-webkit-slider-thumb{
     background-color:var(--almost-white);
     cursor:pointer;
     border-radius:50%;
+}
+
+input[type="range"]:hover::-webkit-slider-thumb{
+    background-color:var(--very-dark-grey);
+    border:2px solid var(--almost-white);
+
 }
 
 .group_checkbox{
