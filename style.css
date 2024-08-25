@@ -30,11 +30,13 @@ body{
 }
 
 main{
-    padding-block:4rem;
-    padding-inline:1rem;
+    display:flex;
+    justify-content:center;
 }
 
 article{
+    margin-block:4rem;
+    width:21.43rem;
     display:grid;
     gap:1rem;
 }
@@ -144,7 +146,8 @@ input[type="range"]:hover::-webkit-slider-thumb{
 }
 
 .group_checkbox{
-    margin-block:2rem;
+    margin-block-start:2.625rem;
+    margin-block-end:2rem;
     display:grid;
     gap:1rem;
 }
@@ -264,12 +267,9 @@ button:hover svg path{
 
 
 @media screen and (min-width:48rem){
-    main{
-        padding-block:8.31rem;
-        padding-inline:7.125rem;
-    }
-
     article{
+        margin-block:8.31rem;
+        width:28.125rem;
         gap:1.5rem;
     }
     
@@ -303,7 +303,6 @@ button:hover svg path{
     }
     
     .group_checkbox{
-        margin-block:2.625rem;
         gap:1.25rem;
     }
     
@@ -335,6 +334,12 @@ button:hover svg path{
         margin-block-start:2rem;
         padding-block:1.312rem;
         font-size:1.125rem;
+    }
+}
+
+@media screen and (min-width:90rem){
+    article{
+        width:33.75rem;
     }
 }
 
