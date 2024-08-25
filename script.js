@@ -3,6 +3,7 @@ const label_for_check = document.querySelectorAll('.label_for_check');
 const char_length_display = document.querySelector('#char_length_display');
 const copy_icon = document.querySelector('#copy_icon');
 const copy_msg = document.querySelector('#copy_msg');
+const pw_generated = document.querySelector('#pw_generated');
 
 const toggleCheck = (e) => {
     e.target.classList.toggle('checked');
@@ -32,7 +33,20 @@ const showCopyMsg = () =>{
     }, 1000);
 }
 
+const copyToClipboard = (text, showMsg) =>{
+    navigator.clipboard.writeText(text)
+    .then(()=>{
+        showMsg();
+    })
+    .catch(err => {
+        console.error('Failed to copy text: ', err);
+    })
+}
+
 copy_icon.addEventListener('click', ()=>{
-    showCopyMsg();
-    
+    const pw = pw_generated.value;
+    if(pw!==""){
+        copyToClipboard(pw, showCopyMsg);
+    } 
+ 
 });

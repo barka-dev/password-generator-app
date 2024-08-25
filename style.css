@@ -27,7 +27,6 @@
 
 body{
     background-color:#08070B;
-    color:white;
 }
 
 main{
@@ -263,5 +262,80 @@ button:hover svg path{
     fill:var(--neon-green);
 }
 
+
+@media screen and (min-width:48rem){
+    main{
+        padding-block:8.31rem;
+        padding-inline:7.125rem;
+    }
+
+    article{
+        gap:1.5rem;
+    }
+    
+    h1{
+        font-size:1.5rem;
+    }
+    
+    .generated_password{
+        padding-inline:2rem;
+        padding-block:1.18rem;
+    }
+    
+    input[readonly]{
+        font-size:2rem;
+    }
+    
+    .pass_params{
+        padding:1.5rem 2rem 2rem;
+    }
+    
+    label{
+        font-size:1.125rem;
+    }
+    
+    .char_length span{
+        font-size:2rem;
+    }
+    
+    input[type="range"]{
+        margin-block-start:1.625rem;
+    }
+    
+    .group_checkbox{
+        margin-block:2.625rem;
+        gap:1.25rem;
+    }
+    
+    input[type="checkbox"]{
+        margin-inline-end:1.5rem;
+    }
+    
+    .label_for_check{
+        margin-inline-start:2.75rem;   
+    }
+    
+    .label_for_check::before{
+        left:-2.75rem;
+    }
+    
+    .strength_display{
+        padding:1.25rem 2rem;
+    }
+    
+    h2{
+        font-size:1.125rem;
+    }
+    
+    .strength_display span{
+        font-size:1.5rem;
+    }
+    
+    button{
+        margin-block-start:2rem;
+        padding-block:1.312rem;
+        font-size:1.125rem;
+    }
+}
 
 
