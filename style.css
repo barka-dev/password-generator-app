@@ -80,7 +80,12 @@ input[readonly]:focus{
     color:var(--neon-green);
     font-size:1.125rem;
     text-transform:uppercase;
-    display:none;
+    opacity:0;
+    transition: opacity .5s ease;
+}
+
+.show_msg{
+    opacity:1;
 }
 
 a svg {
