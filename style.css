@@ -59,8 +59,12 @@ h2{
     font-size:1.5rem;
 }
 
-a img {
+a svg {
     vertical-align:middle;
+}
+
+a:hover svg path {
+    fill:var(--almost-white);
 }
 
 .pass_params{
@@ -137,12 +141,16 @@ input[type="checkbox"]{
     cursor:pointer;
 }
 
+.label_for_check:hover::before{
+    border:2px solid var(--neon-green);
+}
+
 .checked::before{
     background-color:var(--neon-green);
     background-image:url('./assets/images/icon-check.svg');
     background-repeat:no-repeat;
     background-position:center;
-    border:none;
+    border:2px solid var(--neon-green);
 }
 
 .strength_display{
@@ -174,9 +182,27 @@ h3{
 
 .colored_level div{
     border:2px solid var(--almost-white);
-    background-color:var(--yellow);
     height:1.75rem;
     width:0.62rem;
+}
+
+.too_weak_color{
+    border:none !important;
+    background-color:var(--red);
+}
+
+.weak_color{
+    border:none !important;
+    background-color:var(--orange);
+}
+.medium_color{
+    border:none !important;
+    background-color:var(--yellow);
+}
+
+.strong_color{
+    border:none !important;
+    background-color:var(--neon-green);
 }
 
 button{
@@ -188,7 +214,18 @@ button{
     text-transform:uppercase;
     cursor:pointer;
     background-color:var(--neon-green);
-    border:none;
+    border:2px solid transparent;
+}
+
+button:hover{
+    border:2px solid var(--neon-green);
+    color:var(--neon-green);
+    background-color:transparent;
+    
+}
+
+button:hover svg path{
+    fill:var(--neon-green);
 }
 
 
