@@ -5,6 +5,7 @@ const copy_icon = document.querySelector('#copy_icon');
 const copy_msg = document.querySelector('#copy_msg');
 const pw_generated = document.querySelector('#pw_generated');
 const form = document.querySelector('#form');
+const level = document.querySelectorAll(".level");
 
 const uppercase = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 const lowercase = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
@@ -114,15 +115,98 @@ const createCharsList = (data)=>{
     return characters_list;
 }
 
+const buildRegex = (data)=>{
+    let pattern = `^`;
+    data.pw_params.forEach((param)=>{
+        if(param === 'uppercase'){
+            pattern += '(?=.*[A-Z])';
+        }else if (param === 'lowercase'){
+            pattern += '(?=.*[a-z])';
+        }else if (param === 'numbers'){
+            pattern += '(?=.*[0-9])';
+        }else if (param === 'symbols'){
+            const escapedChars = escapeRegexCharacters(symbols);
+            pattern += `(?=.*[${escapedChars}])`;
+        }
+    });
+    pattern += '.*$';
+    const regex = new RegExp(pattern);
+    return regex;
+}
+
+const complexityLevel = (data, password)=>{
+    const isUppercase = uppercase.some(item => password.includes(item));
+    const isLowercase = lowercase.some(item => password.includes(item));
+    const isNumber = numbers.some(item => password.includes(item));
+    const isSymbol = symbols.some(item => password.includes(item));
+
+    if(data.char_length>=12 && (isUppercase+isLowercase+isNumber+isSymbol) === 4){
+        console.log("Strong");
+        return "strong";
+    }else if(data.char_length>=8 && data.char_length<12 && isSymbol && (isUppercase+isLowercase+isNumber+isSymbol) >= 3){
+        console.log("Medium");
+        return "medium";
+    }else if (data.char_length>=6 && data.char_length<8 && isSymbol && (isUppercase+isLowercase+isNumber+isSymbol) >= 3){
+        const result = [];
+        for (let char of password){
+            if(symbols.includes(char)){
+                result.push(char);
+            }
+        }
+        if(result.length === 1 || result.length === 2){
+            console.log("Weak")
+            return "weak";
+        }else if(result.length>2){
+            console.log("Medium");
+            return "medium";
+        }
+    }else{
+        console.log("Too Weak!");
+        return "too_weak";
+    }
+}
+
+const colorStrengthLevel = (strength_level)=>{
+    level.forEach((element)=>{
+        element.classList.remove('too_weak');
+        element.classList.remove('weak');
+        element.classList.remove('medium');
+        element.classList.remove('strong');
+    });
+    let index = 0;
+    if(strength_level === "too_weak"){
+        index = 1;
+    }else if(strength_level === "weak"){
+        index = 2;
+    }else if(strength_level === "medium"){
+        index = 3;
+    }else if(strength_level === "strong"){
+        index = 4;
+    }else{
+        console.log("something went wrong");
+    }
+
+    for(let i=0 ; i<index ; i++){
+        level[i].classList.add(strength_level);
+    }
+
+
+}
+
 form.addEventListener('submit',(e)=>{
     e.preventDefault();
     const data = fetchData(form);
-    const chars_list = createCharsList(data);
-    const escapedChars = escapeRegexCharacters(symbols);
-    const regex_pattern = new RegExp(`^(?=.*[0-9])(?=.*[${escapedChars}]).*$`);
-    const result = generatePassword(data.char_length, chars_list, regex_pattern);
-    pw_generated.value = result;
-    console.log("password: ",result);
+    if(data.char_length >=4){
+        const chars_list = createCharsList(data);
+        const regex_pattern = buildRegex(data);
+        const result = generatePassword(data.char_length, chars_list, regex_pattern);
+        pw_generated.value = result;
+        console.log("password: ",result);
+        const strength_level = complexityLevel(data, result);
+        colorStrengthLevel(strength_level);
+    }else{
+        alert('Your Character Length must be more more than 4 characters.');
+    }
     
 })
 

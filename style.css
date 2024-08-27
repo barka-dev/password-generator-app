@@ -223,21 +223,21 @@ h2{
     width:0.62rem;
 }
 
-.too_weak_color{
+.too_weak{
     border:none !important;
     background-color:var(--red);
 }
 
-.weak_color{
+.weak{
     border:none !important;
     background-color:var(--orange);
 }
-.medium_color{
+.medium{
     border:none !important;
     background-color:var(--yellow);
 }
 
-.strong_color{
+.strong{
     border:none !important;
     background-color:var(--neon-green);
 }
