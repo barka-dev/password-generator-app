@@ -6,6 +6,7 @@ const copy_msg = document.querySelector('#copy_msg');
 const pw_generated = document.querySelector('#pw_generated');
 const form = document.querySelector('#form');
 const level = document.querySelectorAll(".level");
+const strength_level = document.querySelector("#strength_level");
 
 const uppercase = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 const lowercase = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
@@ -101,7 +102,6 @@ const escapeRegexCharacters = (chars_list)=>{
 const createCharsList = (data)=>{
     let characters_list = [];
     data.pw_params.forEach((param)=>{
-        console.log(param);
         if(param === 'uppercase'){
             characters_list.push(...uppercase);
         }else if (param === 'lowercase'){
@@ -140,33 +140,28 @@ const complexityLevel = (data, password)=>{
     const isNumber = numbers.some(item => password.includes(item));
     const isSymbol = symbols.some(item => password.includes(item));
 
-    if(data.char_length>=12 && (isUppercase+isLowercase+isNumber+isSymbol) === 4){
-        console.log("Strong");
-        return "strong";
-    }else if(data.char_length>=8 && data.char_length<12 && isSymbol && (isUppercase+isLowercase+isNumber+isSymbol) >= 3){
-        console.log("Medium");
-        return "medium";
-    }else if (data.char_length>=6 && data.char_length<8 && isSymbol && (isUppercase+isLowercase+isNumber+isSymbol) >= 3){
+    if(data.char_length<6 || (!isSymbol && (isUppercase+isLowercase+isNumber+isSymbol) === 1)){
+        return "too_weak";
+    }else if ((data.char_length>=6 && data.char_length<8 && !isSymbol && !isNumber) || ((isUppercase+isLowercase+isNumber) === 2)){
+        return "weak";
+    }else if (data.char_length>=8 && data.char_length<12 && isSymbol && isNumber && (isUppercase+isLowercase) >= 1 ){
         const result = [];
         for (let char of password){
             if(symbols.includes(char)){
                 result.push(char);
             }
         }
-        if(result.length === 1 || result.length === 2){
-            console.log("Weak")
-            return "weak";
-        }else if(result.length>2){
-            console.log("Medium");
+        if(result.length <=3){
             return "medium";
+        }else{
+            return "strong";
         }
     }else{
-        console.log("Too Weak!");
-        return "too_weak";
+        return "strong";
     }
 }
 
-const colorStrengthLevel = (strength_level)=>{
+const changeLevelColor = (strength_level)=>{
     level.forEach((element)=>{
         element.classList.remove('too_weak');
         element.classList.remove('weak');
@@ -184,29 +179,47 @@ const colorStrengthLevel = (strength_level)=>{
         index = 4;
     }else{
         console.log("something went wrong");
+        alert("something went wrong");
     }
 
     for(let i=0 ; i<index ; i++){
         level[i].classList.add(strength_level);
     }
+}
 
-
+const changeLevelLabel = (level)=>{
+    if(level === "too_weak"){
+        strength_level.textContent = "too weak!";
+    }else if(level === "weak"){
+        strength_level.textContent = "weak";
+    }else if(level === "medium"){
+        strength_level.textContent = "medium";
+    }else if(level === "strong"){
+        strength_level.textContent = "strong";
+    }else{
+        console.log("something went wrong");
+        alert("something went wrong");
+    }
 }
 
 form.addEventListener('submit',(e)=>{
     e.preventDefault();
+    const isChecked = document.querySelector("input[type='checkbox']:checked");
     const data = fetchData(form);
     if(data.char_length >=4){
-        const chars_list = createCharsList(data);
-        const regex_pattern = buildRegex(data);
-        const result = generatePassword(data.char_length, chars_list, regex_pattern);
-        pw_generated.value = result;
-        console.log("password: ",result);
-        const strength_level = complexityLevel(data, result);
-        colorStrengthLevel(strength_level);
+        if(isChecked){
+            const chars_list = createCharsList(data);
+            const regex_pattern = buildRegex(data);
+            const result = generatePassword(data.char_length, chars_list, regex_pattern);
+            pw_generated.value = result;
+            const strength_level = complexityLevel(data, result);
+            changeLevelLabel(strength_level);
+            changeLevelColor(strength_level);
+        }else{
+            alert('You must select at least one type of character to be included in the generated password.');
+        }
     }else{
         alert('Your Character Length must be more more than 4 characters.');
-    }
-    
-})
+    }  
+});
 
