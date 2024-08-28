@@ -174,6 +174,7 @@ const changeLevelLabel = (level)=>{
 
 form.addEventListener('submit',(e)=>{
     e.preventDefault();
+    pw_generated.value = '';
     const isChecked = document.querySelector("input[type='checkbox']:checked");
     const data = fetchData(form);
     if(data.char_length >=4){
