@@ -89,11 +89,17 @@ input[readonly]:focus{
     opacity:1;
 }
 
-a svg {
+#copy_icon{
+    background:none;
+    border:none;
+    cursor:pointer;
+}
+
+#copy_icon svg {
     vertical-align:middle;
 }
 
-a:hover svg path {
+#copy_icon:hover svg path {
     fill:var(--almost-white);
 }
 
@@ -242,7 +248,7 @@ h2{
     background-color:var(--neon-green);
 }
 
-button{
+form button{
     margin-block-start:1rem;
     width:100%;
     padding-block:1.09rem;
@@ -254,14 +260,14 @@ button{
     border:2px solid transparent;
 }
 
-button:hover{
+form button:hover{
     border:2px solid var(--neon-green);
     color:var(--neon-green);
     background-color:transparent;
     
 }
 
-button:hover svg path{
+form button:hover svg path{
     fill:var(--neon-green);
 }
 
@@ -330,7 +336,7 @@ button:hover svg path{
         font-size:1.5rem;
     }
     
-    button{
+    form button{
         margin-block-start:2rem;
         padding-block:1.312rem;
         font-size:1.125rem;
