@@ -13,7 +13,6 @@ const lowercase = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', '
 const numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 const symbols = ['!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '_', '=', '+', '[', ']', '{', '}', '|', '\\', ':', ';', '"', '\'', '<', '>', ',', '.', '?', '/', '`', '~'];
 
-
 const toggleCheck = (e) => {
     e.target.classList.toggle('checked');
 }
@@ -28,7 +27,6 @@ const handleRangeColor = (e) => {
     const position = (e.target.value*100)/e.target.max;
     range.style.background = `linear-gradient(90deg, rgba(164,255,175,1) 0%, rgba(164,255,175,1) ${position}%, rgba(24,23,31,1) ${position}%)`;
 }
-
 
 range.addEventListener('input', (e)=>{
     handleRangeColor(e);
@@ -57,7 +55,6 @@ copy_icon.addEventListener('click', ()=>{
     if(pw!==""){
         copyToClipboard(pw, showCopyMsg);
     } 
- 
 });
 
 const fetchData = (form) =>{
@@ -78,21 +75,20 @@ const fetchData = (form) =>{
 }
 
 const generatePassword = (nb_characters, characters, pattern)=>{
-    let pw = '';
-    if(nb_characters>0){
-        do{
-            pw = '';
-            for (let i = 0; i < nb_characters; i++) {
-                const random_index = Math.floor(Math.random()*characters.length);
-                pw += characters[random_index];
-            }
-        }while(!pattern.test(pw));
-        return pw;
-    }else{
+    if(nb_characters <= 0){
         alert("Chars length should be more than ZERO");
+        return;
     }
-   
-    
+
+    let pw;
+    do{
+        pw = Array.from({length:nb_characters},()=>{
+            const random_index = Math.floor(Math.random()*characters.length);
+            return characters[random_index];
+        }).join('');
+
+    }while(!pattern.test(pw));
+    return pw;
 }
 
 const escapeRegexCharacters = (chars_list)=>{
@@ -100,38 +96,28 @@ const escapeRegexCharacters = (chars_list)=>{
 }
 
 const createCharsList = (data)=>{
+    const charMap = {
+        'uppercase': uppercase,
+        'lowercase': lowercase,
+        'numbers': numbers,
+        'symbols': symbols
+    };
     let characters_list = [];
     data.pw_params.forEach((param)=>{
-        if(param === 'uppercase'){
-            characters_list.push(...uppercase);
-        }else if (param === 'lowercase'){
-            characters_list.push(...lowercase);
-        }else if (param === 'numbers'){
-            characters_list.push(...numbers);
-        }else if (param === 'symbols'){
-            characters_list.push(...symbols);
-        }  
+        characters_list.push(...charMap[param]);
     });
     return characters_list;
 }
 
 const buildRegex = (data)=>{
-    let pattern = `^`;
-    data.pw_params.forEach((param)=>{
-        if(param === 'uppercase'){
-            pattern += '(?=.*[A-Z])';
-        }else if (param === 'lowercase'){
-            pattern += '(?=.*[a-z])';
-        }else if (param === 'numbers'){
-            pattern += '(?=.*[0-9])';
-        }else if (param === 'symbols'){
-            const escapedChars = escapeRegexCharacters(symbols);
-            pattern += `(?=.*[${escapedChars}])`;
-        }
-    });
-    pattern += '.*$';
-    const regex = new RegExp(pattern);
-    return regex;
+    const regexPattern = {
+        'uppercase': '(?=.*[A-Z])',
+        'lowercase': '(?=.*[a-z])',
+        'numbers': '(?=.*[0-9])',
+        'symbols': `(?=.*[${escapeRegexCharacters(symbols)}])`
+    }
+    const pattern = `^${data.pw_params.map(param=>regexPattern[param] || '').join('')}.*$`;
+    return new RegExp(pattern);
 }
 
 const complexityLevel = (data, password)=>{
@@ -140,62 +126,46 @@ const complexityLevel = (data, password)=>{
     const isNumber = numbers.some(item => password.includes(item));
     const isSymbol = symbols.some(item => password.includes(item));
 
-    if(data.char_length<6 || (!isSymbol && (isUppercase+isLowercase+isNumber+isSymbol) === 1)){
+    const charType = [isUppercase, isLowercase, isNumber, isSymbol ].filter(Boolean).length;
+    if(data.char_length<6 || (charType === 1 && !isSymbol)){
         return "too_weak";
-    }else if ((data.char_length>=6 && data.char_length<8 && !isSymbol && !isNumber) || ((isUppercase+isLowercase+isNumber) === 2)){
-        return "weak";
-    }else if (data.char_length>=8 && data.char_length<12 && isSymbol && isNumber && (isUppercase+isLowercase) >= 1 ){
-        const result = [];
-        for (let char of password){
-            if(symbols.includes(char)){
-                result.push(char);
-            }
-        }
-        if(result.length <=3){
-            return "medium";
-        }else{
-            return "strong";
-        }
-    }else{
-        return "strong";
     }
+
+    if((data.char_length>=6 && data.char_length<8) || (charType === 2 && !isSymbol)){
+        return "weak";
+    }
+
+    if((data.char_length>=8 && data.char_length<12 && charType >= 3) || (data.char_length>=12 && charType >= 3 && !isSymbol)){
+        const symbolCount = [...password].filter(char => symbols.includes(char)).length;
+        if(symbolCount <= 3){
+            return "medium";
+        }
+    }
+    return "strong";
 }
 
 const changeLevelColor = (strength_level)=>{
-    level.forEach((element)=>{
-        element.classList.remove('too_weak');
-        element.classList.remove('weak');
-        element.classList.remove('medium');
-        element.classList.remove('strong');
-    });
-    let index = 0;
-    if(strength_level === "too_weak"){
-        index = 1;
-    }else if(strength_level === "weak"){
-        index = 2;
-    }else if(strength_level === "medium"){
-        index = 3;
-    }else if(strength_level === "strong"){
-        index = 4;
-    }else{
-        console.log("something went wrong");
-        alert("something went wrong");
-    }
+    const levels = ['too_weak','weak','medium','strong'];
+    const index = levels.indexOf(strength_level);
 
-    for(let i=0 ; i<index ; i++){
-        level[i].classList.add(strength_level);
-    }
+    level.forEach((element, i)=>{
+        element.classList.remove(...levels);
+        if(i<=index){
+            element.classList.add(strength_level);
+        }
+    })
 }
 
 const changeLevelLabel = (level)=>{
-    if(level === "too_weak"){
-        strength_level.textContent = "too weak!";
-    }else if(level === "weak"){
-        strength_level.textContent = "weak";
-    }else if(level === "medium"){
-        strength_level.textContent = "medium";
-    }else if(level === "strong"){
-        strength_level.textContent = "strong";
+    const labels = {
+        "too_weak": "too weak!",
+        "weak": "weak",
+        "medium": "medium",
+        "strong": "strong"
+    };
+
+    if(labels[level]){
+        strength_level.textContent = labels[level];
     }else{
         console.log("something went wrong");
         alert("something went wrong");
